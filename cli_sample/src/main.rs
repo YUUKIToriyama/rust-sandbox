@@ -58,3 +58,32 @@ fn run<R: BufRead>(reader: R, verbose: bool) {
         println!("{}", result);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_ok() {
+        let calculator = lib::RpnCalculator::new(false);
+
+        let testcases = vec![
+            ("5", 5),
+            ("-59", -59),
+            ("2 3 +", 5),
+            ("2 3 -", -1),
+            ("2 3 *", 6),
+            ("10 5 /", 2),
+            ("10 5 %", 0),
+        ];
+        for testcase in testcases {
+            assert_eq!(calculator.eval(testcase.0), testcase.1);
+        }
+    }
+    #[test]
+    #[should_panic]
+    fn test_ng() {
+        let calculator = lib::RpnCalculator::new(false);
+        calculator.eval("10 10 ^");
+    }
+}
