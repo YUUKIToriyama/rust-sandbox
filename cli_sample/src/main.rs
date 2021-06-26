@@ -1,6 +1,7 @@
 use clap::{App, Arg};
 use std::fs::File;
 use std::io::{stdin, BufRead, BufReader};
+mod lib;
 
 fn main() {
     let matches = App::new("cli sample")
@@ -49,11 +50,11 @@ fn main() {
 
 // R: BufReadを実装している任意の型。BufReader<File>型、StdinLock型を想定
 fn run<R: BufRead>(reader: R, verbose: bool) {
+    let calculator = lib::RpnCalculator::new(verbose);
+
     for line in reader.lines() {
         let line = line.unwrap();
-        println!("{}", line);
-    }
-    if verbose {
-        println!("Verbose mode.");
+        let result = calculator.eval(&line);
+        println!("{}", result);
     }
 }
